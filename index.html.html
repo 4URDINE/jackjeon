@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>작전고등학교 공간 안내</title>
+<style>
+:root{--navy:#18345b;--blue:#2868b2;--ink:#24344b;--muted:#718096;--line:#d9e2ef;--red:#e95d55}
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:var(--ink);font-family:Arial,"Noto Sans KR",sans-serif}
+header{height:72px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 26px}
+.brand{font-size:20px;font-weight:800}.brand small{font-size:11px;color:#c9d8ee;margin-left:8px;font-weight:500}
+.head-actions{display:flex;gap:8px}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.btn.primary{background:var(--blue);color:#fff}.btn.light{background:#eef3fa;color:var(--navy)}.btn.danger{background:#fff0ef;color:#b43c36}
+main{max-width:1400px;margin:24px auto;padding:0 20px}.heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:16px;gap:12px}h1{font-size:25px;margin:0 0 5px}.sub{font-size:13px;color:var(--muted)}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:14px}.panel{background:#fff;border:1px solid var(--line);border-radius:20px;min-height:640px;position:relative;overflow:hidden;box-shadow:0 8px 24px #18345b0a}
+.panel-head{padding:22px 26px 10px;display:flex;justify-content:space-between;align-items:center}.floor-title{font-size:23px;font-weight:850}.floor-desc{font-size:12px;color:var(--muted);margin-top:4px}.tag{font-size:11px;background:#edf4ff;color:#2b64a5;border-radius:20px;padding:7px 10px}
+.map{padding:12px 26px 28px}.corridor{height:24px;background:#f0f3f7;border:1px solid #dce4ee;border-radius:7px;margin:7px 0 0;font-size:10px;color:#8a98a9;padding:4px 10px}
+.room-row{display:flex;gap:7px;min-height:92px;margin-bottom:7px}.room{position:relative;flex:1;min-width:0;border:1.5px solid #cbd7e5;border-radius:10px;background:#f8faff;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:9px 4px;font-size:13px;font-weight:700;line-height:1.35;cursor:default}
+.room.classroom{background:#f0edff;border-color:#d8d0f5}.room.special{background:#e8f4e9;border-color:#c9e3cf}.room.office{background:#fff4d8;border-color:#f0dfae}.room.common{background:#e8f2fb;border-color:#cbdff1}.room small{font-size:10px;color:#718096;font-weight:500;margin-top:4px}.room.wide{flex:1.5}
+.room.has-event{outline:2px solid #ff8b83;outline-offset:1px;box-shadow:0 0 0 4px #ff8b831c;animation:eventRoomGlow 2.8s ease-in-out infinite}.room.admin-select{cursor:pointer}.room.admin-select:hover{outline:3px solid #4c8bd0;outline-offset:1px}
+.pin{position:absolute;top:-11px;right:-7px;width:29px;height:29px;border:2px solid white;border-radius:50%;background:linear-gradient(145deg,#ff8178,#df3e50);color:#fff;font-size:15px;font-weight:900;display:grid;place-items:center;z-index:2;cursor:pointer;box-shadow:0 3px 10px #d94b5570;animation:pinPulse 1.9s ease-out infinite}.pin:after{content:"";position:absolute;inset:-5px;border:2px solid #f06b6b88;border-radius:50%;animation:pinRipple 1.9s ease-out infinite}.pin:hover{transform:scale(1.14);filter:brightness(1.06)}
+.nav{display:flex;flex-direction:column;gap:9px}.floor-btn{height:91px;border:1px solid var(--line);border-radius:15px;background:#fff;color:#53647a;font-size:17px;font-weight:800;cursor:pointer;position:relative}.floor-btn.active{background:var(--navy);color:#fff}.alert{position:absolute;right:8px;top:7px;background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;font-size:12px;display:grid;place-items:center}
+.switch{position:absolute;left:0;top:50%;transform:translateY(-50%);border:0;border-radius:0 12px 12px 0;background:var(--blue);color:white;width:34px;height:66px;font-size:25px;cursor:pointer;z-index:3}
+.event-card{display:none;position:absolute;right:18px;bottom:18px;width:min(360px,calc(100% - 36px));background:linear-gradient(145deg,#fff 0%,#f7faff 100%);border:1px solid #d8e5f5;border-radius:19px;padding:19px 18px 17px;box-shadow:0 16px 42px #18345b35;z-index:5;overflow:hidden}.event-card:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#2868b2,#64b5e8,#8b7cf6,#ff9b83);background-size:200% 100%;animation:cardShimmer 4s linear infinite}.event-card.show{display:block;animation:cardEnter .32s cubic-bezier(.2,.8,.2,1) both}.event-card h3{font-size:18px;line-height:1.4;margin:10px 30px 11px 0;color:#1e3555}.event-card p{font-size:12px;color:#627187;line-height:1.7;margin:7px 0}.close{float:right;border:0;border-radius:50%;width:27px;height:27px;cursor:pointer;background:#eaf0f8;color:#52647c;font-size:18px}.close:hover{background:#dce8f7;transform:rotate(90deg);transition:transform .2s}.status{display:inline-flex;align-items:center;gap:6px;border-radius:20px;background:#e5f5ea;color:#28734b;padding:6px 10px;font-size:10px;font-weight:800;box-shadow:0 2px 7px #28734b14}.status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px #28734b1c}
+.playground{display:none;padding:24px}.playground.show{display:block}.field{margin:30px auto;max-width:850px;aspect-ratio:1.75;background:#70b77b;border:10px solid #e4eaf0;border-radius:25px;position:relative}.field:before{content:"";position:absolute;inset:8%;border:2px solid #ffffffbd}.mid{position:absolute;top:8%;bottom:8%;left:50%;border-left:2px solid #ffffffbd}.circle{position:absolute;width:18%;aspect-ratio:1;border:2px solid #ffffffbd;border-radius:50%;left:41%;top:41%}.goal{position:absolute;top:39%;width:5%;height:22%;border:3px solid white}.goal.l{left:-1px;border-left:0}.goal.r{right:-1px;border-right:0}
+.modal-back{display:none;position:fixed;inset:0;background:#10223c88;z-index:20;align-items:center;justify-content:center;padding:16px}.modal-back.show{display:flex}.modal{background:white;border-radius:18px;padding:22px;width:min(480px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 70px #0003}.modal h2{margin:0 0 16px;font-size:20px}.field-label{display:block;font-size:12px;font-weight:700;margin:12px 0 6px}.modal input,.modal textarea,.modal select{width:100%;border:1px solid #cfd9e6;border-radius:9px;padding:11px;font:inherit;font-size:14px}.modal textarea{min-height:82px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.help{font-size:11px;color:var(--muted);line-height:1.6;margin-top:10px}.admin-banner{display:none;background:#eaf3ff;border:1px solid #c8dcf4;color:#24558d;border-radius:12px;padding:11px 14px;font-size:12px;margin-bottom:12px}.admin-banner.show{display:block}.notice{font-size:11px;color:#7c899a;margin-top:15px;line-height:1.6}.event-manage{border-top:1px solid #e5ebf2;margin-top:14px;padding-top:12px}.event-manage-item{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #edf0f5;font-size:12px}.event-manage-item button{font-size:11px;padding:6px 8px}
+.event-board{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:0 8px 24px #18345b0a}
+.event-board-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.event-board h2{font-size:19px;margin:0 0 4px;color:#1e3555}
+.student-tag{font-size:11px;border-radius:20px;padding:7px 11px;background:#edf4ff;color:#2b64a5;font-weight:800;white-space:nowrap}
+.student-tag.teacher{background:#e8f5ec;color:#28734b}
+.event-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.event-item{border:1px solid #e1e9f3;border-radius:13px;padding:13px 14px;background:linear-gradient(145deg,#fff,#f8fbff);cursor:pointer;text-align:left;transition:.18s;min-width:0}
+.event-item:hover{transform:translateY(-2px);border-color:#9dbde2;box-shadow:0 7px 18px #18345b12}
+.event-item strong{display:block;font-size:14px;line-height:1.45;color:#243b5b;margin:7px 0 5px}
+.event-item .event-meta{font-size:11px;color:#718096;line-height:1.5}
+.event-item .status{font-size:9px;padding:5px 8px}
+.empty-events{padding:18px;border:1px dashed #ccd8e7;border-radius:12px;color:#718096;font-size:13px;text-align:center}
+@keyframes pinPulse{0%,100%{box-shadow:0 3px 10px #d94b5570;transform:scale(1)}50%{box-shadow:0 4px 16px #d94b55a8;transform:scale(1.08)}}
+@keyframes pinRipple{0%{transform:scale(.72);opacity:.8}100%{transform:scale(1.65);opacity:0}}
+@keyframes eventRoomGlow{0%,100%{box-shadow:0 0 0 3px #ff8b8315}50%{box-shadow:0 0 0 5px #ff8b8330}}
+@keyframes cardEnter{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes cardShimmer{from{background-position:0% 50%}to{background-position:200% 50%}}
+body{background:radial-gradient(circle at 8% 12%,#dcecff 0,transparent 28%),radial-gradient(circle at 92% 78%,#e8e3ff 0,transparent 25%),#f3f6fb;background-attachment:fixed}
+.panel,.event-board{transition:box-shadow .25s,transform .25s}
+.panel:hover,.event-board:hover{box-shadow:0 13px 34px #18345b12}
+.event-item{position:relative;overflow:hidden}
+.event-item:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 35%,#ffffff9c 50%,transparent 65%);transform:translateX(-130%);transition:transform .65s}
+.event-item:hover:after{transform:translateX(130%)}
+.new-flame{display:inline-flex;align-items:center;gap:4px;margin-left:7px;padding:3px 8px;border-radius:20px;color:#fff;font-size:10px;font-weight:900;background:linear-gradient(110deg,#ffb12b,#ff5b35,#ed2f54,#ff9b2e);background-size:220% 100%;box-shadow:0 2px 10px #ff633d55;animation:newFlame 1.15s ease-in-out infinite,flameShift 2.4s linear infinite;vertical-align:middle}
+.new-flame:before{content:"🔥"}
+.event-item.is-new{border-color:#ff9b58;box-shadow:0 0 0 2px #ff9b5826,0 7px 20px #ff784022;animation:newCardGlow 1.8s ease-in-out infinite}
+.pin.is-new{background:linear-gradient(145deg,#ffb52e,#f04436);box-shadow:0 0 0 4px #ff9b5830,0 3px 16px #ed4c4c88}
+@keyframes newFlame{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(1.08)}}
+@keyframes flameShift{from{background-position:0% 50%}to{background-position:220% 50%}}
+@keyframes newCardGlow{0%,100%{box-shadow:0 0 0 2px #ff9b5820}50%{box-shadow:0 0 0 4px #ff9b5840,0 9px 24px #ff784038}}
+
+@media(prefers-reduced-motion:reduce){.pin,.pin:after,.room.has-event,.event-card.show,.event-card:before{animation:none!important;transition:none!important}}
+@media(max-width:720px){.event-board{padding:16px 13px}.event-board-head{align-items:flex-start}.event-list{grid-template-columns:1fr}header{padding:0 13px}.brand{font-size:16px}.brand small{display:none}main{padding:0 9px;margin:14px auto}.workspace{grid-template-columns:minmax(0,1fr) 65px;gap:7px}.floor-btn{height:75px;font-size:14px}.panel{min-height:600px}.panel-head{padding:17px 15px 8px}.map{padding:10px 12px 24px}.room-row{gap:4px;min-height:75px}.room{font-size:10px;padding:5px 2px}.room small{font-size:8px}.corridor{height:20px}.heading{align-items:flex-start;flex-direction:column}.head-actions .btn{padding:8px;font-size:11px}}
+</style>
+</head>
+<body>
+<header><div class="brand">작전고등학교 <small>학교 공간 및 행사 안내</small></div><div class="head-actions"><button id="adminBtn" class="btn light">관리자 로그인</button><button id="logoutBtn" class="btn light" style="display:none">로그아웃</button></div></header>
+<main>
+<div class="heading"><div><h1>학교 공간 안내</h1><div class="sub">층을 선택하고 지도 위의 행사 표시를 눌러 내용을 확인하세요.</div></div><div class="sub" id="syncState">행사 정보 연결 확인 중...</div></div>
+<div class="admin-banner" id="adminBanner">관리자 모드입니다. 장소를 클릭해 행사를 등록하거나, 기존 행사 핀을 눌러 수정·삭제할 수 있습니다.</div>
+<div class="workspace">
+<section class="panel">
+<button class="switch" id="switchBtn" aria-label="운동장 보기">‹</button>
+<div id="schoolView"><div class="panel-head"><div><div class="floor-title" id="floorTitle">1층</div><div class="floor-desc" id="floorDesc"></div></div><div class="tag">층별 평면 안내도</div></div><div class="map" id="map"></div></div>
+<div class="playground" id="playground"><div class="floor-title">운동장</div><div class="floor-desc">작전스포츠페스티벌 · 반대항 축구 진행 중</div><div class="field"><div class="mid"></div><div class="circle"></div><div class="goal l"></div><div class="goal r"></div></div><b>⚽ 반대항 축구 진행 중</b><p class="sub">작전스포츠페스티벌 · 10월 30일(금) 13시 15분 출발 · 10월 28일(수) 23시까지 신청</p><p class="sub">운동장 행사 위치</p></div>
+<div class="event-card" id="eventCard"><button class="close" id="closeCard">×</button><div id="eventContent"></div></div>
+</section>
+<nav class="nav" id="floorNav">
+<button class="floor-btn active" data-floor="1">1층</button><button class="floor-btn" data-floor="2">2층</button><button class="floor-btn" data-floor="3">3층</button><button class="floor-btn" data-floor="4">4층</button><button class="floor-btn" data-floor="5">5층</button>
+</nav></div>
+<section class="event-board">
+  <div class="event-board-head"><div><h2>학교 행사 안내</h2><p class="sub">로그인하지 않아도 누구나 행사 내용을 확인할 수 있습니다. 새로 등록된 행사는 72시간 동안 NEW! 불꽃 표시가 나타납니다.</p></div><span class="student-tag" id="viewRole">학생 열람 모드</span></div>
+  <div class="event-list" id="eventList"><p class="sub">행사 정보를 불러오는 중...</p></div>
+</section>
+<div class="notice" id="noticeText">학생은 행사 내용을 열람할 수 있습니다. 교사 등록·수정·삭제와 여러 기기 간 공유를 사용하려면 Firebase 설정이 필요합니다. 게시판 제목을 바탕으로 장소를 추정한 항목이 있으니 실제 장소는 공지 원문으로 확인해 주세요.</div>
+</main>
+
+<div class="modal-back" id="loginModal"><div class="modal"><h2>관리자 로그인</h2><label class="field-label">아이디</label><input id="loginEmail" type="text" autocomplete="username" placeholder="아이디"><label class="field-label">비밀번호</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="비밀번호"><div class="modal-actions"><button class="btn light" data-close="loginModal">취소</button><button class="btn primary" id="loginSubmit">로그인</button></div><p class="help">현재 테스트 저장은 이 기기·브라우저에만 남으며, 다른 학생과 공유되지 않습니다. 실제 배포 전 반드시 비밀번호를 변경하고 Firebase 인증을 설정하세요.</p></div></div>
+
+<div class="modal-back" id="eventModal"><div class="modal"><h2 id="eventModalTitle">행사 등록</h2><div class="sub" id="selectedRoom"></div>
+<label class="field-label">행사 제목</label><input id="eventTitle" maxlength="100" placeholder="예: 창의 발명품 전시회">
+<label class="field-label">행사 내용</label><textarea id="eventDescription" maxlength="1500" placeholder="행사 내용과 참여 방법을 입력하세요."></textarea>
+<label class="field-label">시작 날짜</label><input id="eventStart" type="date">
+<label class="field-label">종료 날짜</label><input id="eventEnd" type="date">
+<label class="field-label">표시 상태</label><select id="eventStatus"><option value="예정">진행 예정</option><option value="진행 중">진행 중</option></select>
+<div class="modal-actions"><button class="btn danger" id="deleteEvent" style="display:none;margin-right:auto">삭제</button><button class="btn light" data-close="eventModal">취소</button><button class="btn primary" id="saveEvent">저장</button></div>
+</div></div>
+
+<script type="module">
+let initializeApp, getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut;
+let getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, serverTimestamp;
+
+// Firebase 콘솔에서 발급받은 웹 앱 설정으로 아래 값을 채워주세요.
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+const configured = Object.values(firebaseConfig).every(v => v && !v.startsWith("YOUR_"));
+const DEMO_ADMIN_ID = "minchan";
+const DEMO_ADMIN_PASSWORD = "12345";
+const DEMO_STORAGE_KEY = "jakjeon_school_events_demo_v1";
+let demoMode = false;
+const $ = id => document.getElementById(id);
+const floors = {
+1:{desc:"교무실 · 보건실 · 학생지원 공간",rows:[
+[{n:"동아리실",t:"special"},{n:"창고"},{n:"학습지원실",t:"common"},{n:"보건실",t:"common"},{n:"교무실",t:"office"}],
+[{n:"급식실",t:"special",w:1.5},{n:"교과준비실"},{n:"교실 지원 공간",t:"common"},{n:"행정·관리 공간",t:"office",w:1.3}]]},
+2:{desc:"교실 · 미디어실 · 학생 활동 공간",rows:[
+[{n:"강당(연결)",t:"common",w:1.3},{n:"무한상상실",t:"special"},{n:"융합인재교육실",t:"special"},{n:"화장실"},{n:"미디어실",t:"common"},{n:"방송실",t:"common"}],
+[{n:"만화실Ⅰ",t:"special"},{n:"만화실Ⅱ",t:"special"},{n:"디지털실Ⅰ",t:"special"},{n:"학생자치회의실",t:"office"},{n:"커뮤니티실",t:"common"},{n:"교과교실",t:"common"}]]},
+3:{desc:"도서실(지혜의 숲) · 과학·진로 특별실",rows:[
+[{n:"도서실",s:"지혜의 숲",t:"common",w:1.8},{n:"모둠마당"},{n:"화장실"},{n:"생명과학·지구과학실",t:"special"},{n:"진로활동실",t:"office"},{n:"정보실",t:"common"}],
+[{n:"1학년 교무실",t:"office"},{n:"더큰숲",s:"스터디카페",t:"special"},{n:"1-6",t:"classroom"},{n:"1-7",t:"classroom"}]]},
+4:{desc:"2학년 교실 · 대강의실 · 컴퓨터실",rows:[
+[{n:"대강의실",t:"office",w:1.2},{n:"온라인 스튜디오",t:"common"},{n:"영어교과실",t:"special"},{n:"화장실"},{n:"종합강의실Ⅰ",t:"office"},{n:"컴퓨터실",t:"common"}],
+[{n:"2-1",t:"classroom"},{n:"2-2",t:"classroom"},{n:"2-3",t:"classroom"},{n:"디지털실Ⅱ",t:"special"},{n:"2학년 교무실",t:"common"},{n:"학습카페",t:"special"},{n:"2-4",t:"classroom"},{n:"2-5",t:"classroom"},{n:"2-6",t:"classroom"},{n:"2-7",t:"classroom"}]]},
+5:{desc:"3학년 교실 · 진학상담실 · 음악·미술실",rows:[
+[{n:"종합강의실Ⅲ",t:"office"},{n:"종합강의실Ⅱ",t:"office"},{n:"화장실"},{n:"미술실",t:"special"},{n:"음악실",t:"special"}],
+[{n:"3-1",t:"classroom"},{n:"3-2",t:"classroom"},{n:"3-3",t:"classroom"},{n:"디지털실Ⅲ",t:"special"},{n:"진학상담실",t:"office"},{n:"3학년 교무실",t:"common"},{n:"3-4",t:"classroom"},{n:"3-5",t:"classroom"},{n:"3-6",t:"classroom"},{n:"3-7",t:"classroom"}]]}
+};
+let app,auth,db,isAdmin=false,currentFloor=1,events=[],editingId=null,selectedLocation=null;
+const SAMPLE_EVENTS=[
+{id:"sample_health",sample:true,title:"성인지감수성 자가진단 후 선물 증정",description:"자가진단 후 선물을 증정합니다.",startDate:"",endDate:"",status:"안내",floor:1,location:"보건실"},
+{id:"sample_festival",sample:true,title:"작전스포츠페스티벌",description:"10월 30일(금) 13시 15분 출발 · 10월 28일(수) 23시까지 신청.",startDate:"",endDate:"",status:"안내",floor:0,location:"운동장"},
+{id:"sample_stage",sample:true,title:"까치말 한마당 무대공연 참가자 모집",description:"1층 교무실 QR코드로 신청하세요.",startDate:"",endDate:"",status:"안내",floor:1,location:"교무실"},
+{id:"sample_library",sample:true,title:"하루, 한문장 필사 프로젝트",description:"참여 횟수별 간식을 증정합니다.",startDate:"",endDate:"",status:"안내",floor:3,location:"도서실"},
+{id:"sample_soccer",sample:true,title:"반대항 축구",description:"운동장에서 진행하는 체육 행사입니다.",startDate:"",endDate:"",status:"안내",floor:0,location:"운동장"},
+{id:"notice204",sample:true,title:"2026학년 하반기 학교급식 만족도 및 기호도 조사 실시",description:"게시판 게시일: 2026-11-11. 장소가 명시되지 않아 교무실에 임시 표시했습니다. 실제 참여 방법과 장소는 학교 공지 원문을 확인하세요.",startDate:"",endDate:"",status:"안내",floor:1,location:"교무실"},
+{id:"notice203",sample:true,title:"(학생용) 2026학년도 AI중점학교 운영 만족도 조사",description:"게시판 게시일: 2026-11-02. AI 교육 관련 공간인 융합인재교육실로 추정 배치했습니다. 실제 설문은 온라인일 수 있습니다.",startDate:"",endDate:"",status:"안내",floor:2,location:"융합인재교육실"},
+{id:"notice202",sample:true,title:"[신청] 2026년 찾아가는 공학교실 신청 안내",description:"게시판 게시일: 2026-10-30. 공학 체험 관련 공간인 융합인재교육실로 추정 배치했습니다. 실제 운영 장소는 공지 원문을 확인하세요.",startDate:"",endDate:"",status:"안내",floor:2,location:"융합인재교육실"},
+{id:"notice201",sample:true,title:"2026학년도 2학년 현장체험학습(수학여행) 만족도 조사(학생용)",description:"게시판 게시일: 2026-10-19. 2학년 관련 안내라 4층 2학년 교무실로 추정 배치했습니다. 설문은 온라인일 수 있습니다.",startDate:"",endDate:"",status:"안내",floor:4,location:"2학년 교무실"},
+{id:"notice200",sample:true,title:"[가정통신문] 2026학년도 결대로자람학교 운영과 활동 안내 및 자체평가와 학교평가를 위한 설문조사 참여",description:"게시판 게시일: 2026-10-01. 전교생·가정 대상 안내로 보아 1층 교무실에 임시 배치했습니다. 실제 참여 방식은 공지 원문을 확인하세요.",startDate:"",endDate:"",status:"안내",floor:1,location:"교무실"},
+{id:"notice199",sample:true,title:"[신청] 2학년(덕적도) 2026 함께 만드는 민주평화길 프로그램",description:"게시판 게시일: 2026-09-21. 2학년 대상 프로그램이라 4층 2학년 교무실로 추정 배치했습니다. 집결 장소는 공지 원문을 확인하세요.",startDate:"",endDate:"",status:"안내",floor:4,location:"2학년 교무실"},
+{id:"notice198",sample:true,title:"[신청] 1학년(강화도) 2026 함께 만드는 민주평화길 프로그램",description:"게시판 게시일: 2026-09-21. 1학년 대상 프로그램이라 3층 1학년 교무실로 추정 배치했습니다. 집결 장소는 공지 원문을 확인하세요.",startDate:"",endDate:"",status:"안내",floor:3,location:"1학년 교무실"},
+{id:"notice197",sample:true,title:"[신청] 디자인 씽킹 역량 배양을 위한 '생활 문제 해결 프로젝트'",description:"게시판 게시일: 2026-09-18. 창의·제작 활동과 관련 있어 2층 무한상상실로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:2,location:"무한상상실"},
+{id:"notice196",sample:true,title:"[신청] 진로 탐색을 위한 '졸업생 멘토링(체육 분야)'",description:"게시판 게시일: 2026-09-03. 진로 멘토링이므로 3층 진로활동실로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:3,location:"진로활동실"},
+{id:"notice195",sample:true,title:"[신청] 독서와 진로 탐색 활동을 위한 '어린왕자' 프로그램",description:"게시판 게시일: 2026-08-31. 독서 활동이므로 3층 도서실(지혜의 숲)로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:3,location:"도서실"},
+{id:"notice194",sample:true,title:"[신청] 3학년 면접프로그램 사전 수요 조사",description:"게시판 게시일: 2026-08-24. 3학년 진학·면접 관련 안내라 5층 진학상담실로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:5,location:"진학상담실"},
+{id:"notice193",sample:true,title:"[신청] 1, 2학년 대상 학부모와 함께하는 진로상담 캠프 안내",description:"게시판 게시일: 2026-08-18. 진로 상담 프로그램이므로 3층 진로활동실로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:3,location:"진로활동실"},
+{id:"notice192",sample:true,title:"[신청][1학년 전체] 2026 정조체험 '진지적 전공 시점' 강좌 신청 안내",description:"게시판 게시일: 2026-08-18. 전공 탐색 강좌로 보아 3층 진로활동실에 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:3,location:"진로활동실"},
+{id:"notice191",sample:true,title:"[신청] 2026학년도 8월 찾아오는 진로특강(생명&의료보건계열)",description:"게시판 게시일: 2026-08-13. 생명·의료보건 분야 특강이므로 3층 생명과학·지구과학실로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:3,location:"생명과학·지구과학실"},
+{id:"notice190",sample:true,title:"[신청] 진로탐색을 위한 '졸업생 멘토링' 신청 안내",description:"게시판 게시일: 2026-08-11. 진로 멘토링이므로 3층 진로활동실로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:3,location:"진로활동실"},
+{id:"notice189",sample:true,title:"진로미결정 학생을 위한 맞춤형 멘토링 특강 신청 안내",description:"게시판 게시일: 2026-07-20. 진로 상담·멘토링 성격으로 보아 3층 진로활동실로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:3,location:"진로활동실"},
+{id:"notice188",sample:true,title:"2026 찾아오는 미술관 연계 미술관 체험 활동",description:"게시판 게시일: 2026-07-07. 미술 체험과 관련 있어 5층 미술실로 추정 배치했습니다.",startDate:"",endDate:"",status:"안내",floor:5,location:"미술실"},
+];
+const key=(floor,name)=>`${floor}층-${name}`;
+function openModal(id){$(id).classList.add("show")}function closeModal(id){$(id).classList.remove("show")}
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+function dateValue(value){
+ if(!value)return null;
+ if(/^\d{4}-\d{2}-\d{2}$/.test(value))return value;
+ const m=String(value).match(/^(\d{1,2})[-./](\d{1,2})$/);
+ if(!m)return null;
+ const now=new Date(),month=Number(m[1]),day=Number(m[2]);
+ return `${now.getFullYear()}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+}
+function isPastDatedEvent(e){
+ if(e.status!=="진행 중"||!e.endDate)return false;
+ const end=dateValue(e.endDate);
+ if(!end)return false;
+ const now=new Date(),today=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+ return end<today;
+}
+function createdTime(e){const v=e?.createdAt;if(!v)return 0;if(typeof v.toDate==="function")return v.toDate().getTime();const n=typeof v==="number"?v:Date.parse(v);return Number.isFinite(n)?n:0;}
+function isNewEvent(e){const t=createdTime(e);return t>0&&(Date.now()-t)<72*60*60*1000;}
+function statusFor(e){if(e.sample)return e.status;const today=new Date().toISOString().slice(0,10);if(e.status==="진행 중" && e.endDate>=today && e.startDate<=today)return "진행 중";if(e.endDate<today)return "종료";return e.status==="진행 중"?"진행 예정":e.status}
+function showEvent(e){
+ $("eventContent").innerHTML=`<span class="status">${escapeHtml(statusFor(e))}</span><h3>${escapeHtml(e.title)}</h3><p>📍 ${escapeHtml(e.location)}${+e.floor>0?` · ${e.floor}층`:""}</p><p>📅 ${escapeHtml(e.startDate||"날짜 미정")} ~ ${escapeHtml(e.endDate||"날짜 미정")}</p><p>${escapeHtml(e.description||"상세 설명이 없습니다.")}</p>`;
+ if(isAdmin){
+  const actions=document.createElement("div");actions.style.cssText="display:flex;gap:8px;margin-top:12px";
+  const edit=document.createElement("button");edit.className="btn light";edit.textContent="수정";edit.onclick=()=>openEventForm(e.floor,e.location,e);actions.appendChild(edit);
+  const del=document.createElement("button");del.className="btn danger";del.textContent="삭제";del.onclick=()=>deleteAnyEvent(e);actions.appendChild(del);
+  $("eventContent").appendChild(actions);
+ }
+ $("eventCard").classList.add("show");
+}
+function renderEventList(){
+ const list=$("eventList");if(!list)return;
+ const visible=events.filter(e=>statusFor(e)!=="종료");
+ if(!visible.length){list.innerHTML='<div class="empty-events">현재 안내 중인 행사가 없습니다.</div>';return}
+ list.innerHTML="";
+ visible.forEach(e=>{
+  const item=document.createElement("button");item.className="event-item"+(isNewEvent(e)?" is-new":"");item.type="button";
+  item.innerHTML=`<span class="status">${escapeHtml(statusFor(e))}</span>${isNewEvent(e)? '<span class="new-flame">NEW!</span>' : ""}<strong>${escapeHtml(e.title)}</strong><div class="event-meta">📍 ${escapeHtml(e.location)}${+e.floor>0?` · ${e.floor}층`:""}<br>📅 ${escapeHtml(e.startDate||"날짜 미정")} ~ ${escapeHtml(e.endDate||"날짜 미정")}</div>`;
+  item.onclick=()=>{if(+e.floor>0)renderFloor(+e.floor);showEvent(e)};list.appendChild(item);
+ });
+}
+async function deleteAnyEvent(e){
+ if(!confirm("이 행사를 삭제할까요?"))return;
+ try{
+  if(e.sample){
+   const hidden=JSON.parse(localStorage.getItem("hiddenSampleEventIds")||"[]");if(!hidden.includes(e.id))hidden.push(e.id);
+   localStorage.setItem("hiddenSampleEventIds",JSON.stringify(hidden));
+   events=events.filter(x=>x.id!==e.id);
+  }else if(demoMode){
+   events=events.filter(x=>x.id!==e.id);localStorage.setItem(DEMO_STORAGE_KEY,JSON.stringify(events.filter(x=>!x.sample)));
+  }else{await deleteDoc(doc(db,"events",e.id));}
+  $("eventCard").classList.remove("show");renderFloor(currentFloor);renderEventList();
+ }catch(err){alert("삭제하지 못했습니다: "+err.message)}
+}
+async function deletePastEvent(e){
+ if(!confirm("종료 날짜가 지난 진행 중 행사입니다. 이 행사를 삭제할까요?"))return;
+ try{
+  if(e.sample){
+   const hidden=JSON.parse(localStorage.getItem("hiddenSampleEventIds")||"[]");
+   if(!hidden.includes(e.id))hidden.push(e.id);
+   localStorage.setItem("hiddenSampleEventIds",JSON.stringify(hidden));
+   events=events.filter(item=>item.id!==e.id);
+  }else if(demoMode){
+   events=events.filter(item=>item.id!==e.id);
+   localStorage.setItem(DEMO_STORAGE_KEY,JSON.stringify(events.filter(item=>!item.sample)));
+  }else{
+   await deleteDoc(doc(db,"events",e.id));
+  }
+  $("eventCard").classList.remove("show");
+  renderFloor(currentFloor);
+ }catch(err){alert("삭제하지 못했습니다: "+err.message)}
+}
+function escapeHtml(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderFloor(f){currentFloor=f;$("schoolView").style.display="block";$("playground").classList.remove("show");$("floorTitle").textContent=f+"층";$("floorDesc").textContent=floors[f].desc;document.querySelectorAll(".floor-btn").forEach(b=>{const n=+b.dataset.floor;b.classList.toggle("active",n===f);b.querySelector(".alert")?.remove();if(n!==f&&events.some(e=>+e.floor===n&&statusFor(e)!=="종료")){const a=document.createElement("span");a.className="alert";a.textContent="!";b.appendChild(a)}});$("map").innerHTML="";
+floors[f].rows.forEach(row=>{const c=document.createElement("div");c.className="corridor";c.textContent="복도";$("map").appendChild(c);const rr=document.createElement("div");rr.className="room-row";row.forEach(r=>{const room=document.createElement("div");room.className=`room ${r.t||""} ${r.w?"wide":""}`;room.innerHTML=`<span>${escapeHtml(r.n)}</span>${r.s?`<small>${escapeHtml(r.s)}</small>`:""}`;const matches=events.filter(e=>+e.floor===f&&e.location===r.n&&statusFor(e)!=="종료");if(matches.length){room.classList.add("has-event");const pin=document.createElement("button");pin.className="pin"+(matches.some(isNewEvent)?" is-new":"");pin.textContent=matches.some(isNewEvent)?"🔥":"!";pin.title="행사 확인";pin.onclick=ev=>{ev.stopPropagation();showEvent(matches[0])};room.appendChild(pin)}if(isAdmin){room.classList.add("admin-select");room.title="눌러서 행사 등록";room.onclick=()=>openEventForm(f,r.n,null)}rr.appendChild(room)});$("map").appendChild(rr)});renderEventList()}
+function openEventForm(floor,location,event){selectedLocation={floor,location};editingId=event?.id||null;$("eventModalTitle").textContent=event?"행사 수정":"행사 등록";$("selectedRoom").textContent=`${floor}층 · ${location}`;$("eventTitle").value=event?.title||"";$("eventDescription").value=event?.description||"";$("eventStart").value=event?.startDate||"";$("eventEnd").value=event?.endDate||"";$("eventStatus").value=event?.status||"예정";$("deleteEvent").style.display=event?"inline-block":"none";$("eventCard").classList.remove("show");openModal("eventModal")}
+async function saveEvent(){
+ const title=$("eventTitle").value.trim(),startDate=$("eventStart").value,endDate=$("eventEnd").value;
+ if(!title){alert("행사 제목을 입력해 주세요.");return}
+ if(startDate&&endDate&&endDate<startDate){alert("종료 날짜는 시작 날짜보다 빠를 수 없습니다.");return}
+ const data={title,description:$("eventDescription").value.trim(),startDate,endDate,status:$("eventStatus").value,floor:selectedLocation.floor,location:selectedLocation.location};
+ try{
+  if(demoMode){
+   if(editingId){
+    const old=events.find(e=>e.id===editingId);events=events.filter(e=>e.id!==editingId);
+    if(old?.sample){const hidden=JSON.parse(localStorage.getItem("hiddenSampleEventIds")||"[]");if(!hidden.includes(old.id))hidden.push(old.id);localStorage.setItem("hiddenSampleEventIds",JSON.stringify(hidden));}
+    events.push({...data,id:editingId,sample:false,createdAt:old?.createdAt||new Date().toISOString()});
+   }else events.push({...data,id:"demo_"+Date.now(),createdAt:new Date().toISOString()});
+   localStorage.setItem(DEMO_STORAGE_KEY,JSON.stringify(events.filter(e=>!e.sample)));
+   renderFloor(currentFloor);renderEventList();closeModal("eventModal");return;
+  }
+  if(editingId){
+   if(String(editingId).startsWith("sample_")){
+    const hidden=JSON.parse(localStorage.getItem("hiddenSampleEventIds")||"[]");if(!hidden.includes(editingId))hidden.push(editingId);localStorage.setItem("hiddenSampleEventIds",JSON.stringify(hidden));
+    await addDoc(collection(db,"events"),{...data,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+   }else await updateDoc(doc(db,"events",editingId),data);
+  }else await addDoc(collection(db,"events"),{...data,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+  closeModal("eventModal");
+ }catch(e){alert("저장하지 못했습니다: "+e.message)}
+}
+async function deleteEvent(){
+ if(!editingId||!confirm("이 행사를 삭제할까요?"))return;
+ try{
+  const target=events.find(e=>e.id===editingId);
+  if(target?.sample){
+   const hidden=JSON.parse(localStorage.getItem("hiddenSampleEventIds")||"[]");if(!hidden.includes(editingId))hidden.push(editingId);localStorage.setItem("hiddenSampleEventIds",JSON.stringify(hidden));
+  }else if(demoMode){events=events.filter(e=>e.id!==editingId);localStorage.setItem(DEMO_STORAGE_KEY,JSON.stringify(events.filter(e=>!e.sample)));}
+  else await deleteDoc(doc(db,"events",editingId));
+  events=events.filter(e=>e.id!==editingId);renderFloor(currentFloor);renderEventList();closeModal("eventModal");
+ }catch(e){alert("삭제하지 못했습니다: "+e.message)}
+}
+$("saveEvent").onclick=saveEvent;$("deleteEvent").onclick=deleteEvent;
+document.querySelectorAll(".floor-btn").forEach(b=>b.onclick=()=>renderFloor(+b.dataset.floor));
+$("switchBtn").onclick=()=>{const on=$("playground").classList.toggle("show");$("schoolView").style.display=on?"none":"block";$("floorNav").style.visibility=on?"hidden":"visible";$("switchBtn").textContent=on?"›":"‹";$("eventCard").classList.remove("show")};
+$("closeCard").onclick=()=>$("eventCard").classList.remove("show");
+$("adminBtn").onclick=()=>openModal("loginModal");
+$("loginSubmit").onclick=async()=>{const id=$("loginEmail").value.trim(),pw=$("loginPassword").value;if(!configured){alert("교사 등록 기능을 사용하려면 Firebase 설정이 먼저 필요합니다. 현재는 학생 열람 전용 화면입니다.");return}try{await signInWithEmailAndPassword(auth,id,pw);closeModal("loginModal");$("loginPassword").value=""}catch(e){alert("로그인 실패: 이메일 또는 비밀번호를 확인해 주세요.")}};
+$("logoutBtn").onclick=()=>{if(demoMode){demoMode=false;isAdmin=false;setAdmin(false);$("syncState").textContent="학생 열람 모드 · 행사 안내";return}signOut(auth)};
+function setAdmin(user){
+ isAdmin=!!user;$("adminBtn").style.display=user?"none":"inline-block";$("logoutBtn").style.display=user?"inline-block":"none";
+ $("adminBanner").classList.toggle("show",!!user);$("viewRole").textContent=user?"교사 관리 모드":"학생 열람 모드";$("viewRole").classList.toggle("teacher",!!user);
+ renderFloor(currentFloor);renderEventList();
+}
+async function init(){
+ const hidden=JSON.parse(localStorage.getItem("hiddenSampleEventIds")||"[]");
+ if(!configured){
+  const saved=JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY)||"[]");
+  const savedIds=saved.map(e=>e.id);
+  events=[...SAMPLE_EVENTS.filter(e=>!hidden.includes(e.id)&&!savedIds.includes(e.id)),...saved];
+  $("syncState").textContent="학생 열람 모드 · 행사 안내";$("syncState").style.color="#28734b";
+  $("noticeText").textContent="학생 화면에서는 행사 내용을 확인할 수 있습니다. 교사 계정으로 로그인하면 행사 등록·수정·삭제가 가능합니다. 미리보기 데이터는 이 기기·브라우저에 저장됩니다.";
+  renderFloor(1);renderEventList();return;
+ }
+ try{
+  const appMod=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+  const authMod=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+  const dbMod=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+  ({initializeApp}=appMod);({getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}=authMod);
+  ({getFirestore,collection,addDoc,doc,updateDoc,deleteDoc,onSnapshot,serverTimestamp}=dbMod);
+  app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);
+  onAuthStateChanged(auth,user=>setAdmin(user));
+  onSnapshot(collection(db,"events"),snap=>{
+   const saved=JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY)||"[]");
+   const savedIds=saved.map(e=>e.id);
+   events=[...SAMPLE_EVENTS.filter(e=>!hidden.includes(e.id)&&!savedIds.includes(e.id)),...snap.docs.map(d=>({id:d.id,...d.data()})),...saved];
+   $("syncState").textContent="● 행사 정보 실시간 동기화";$("syncState").style.color="#28734b";
+   renderFloor(currentFloor);renderEventList();
+  },err=>{$("syncState").textContent="행사 정보를 불러오지 못했습니다";console.error(err)});
+ }catch(e){
+  $("syncState").textContent="Firebase 연결 실패 · 학생 열람 모드";
+  console.error(e);
+  const saved=JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY)||"[]");
+  events=[...SAMPLE_EVENTS.filter(e=>!hidden.includes(e.id)),...saved];
+  renderFloor(1);renderEventList();
+ }
+}
+init();renderFloor(1);
+</script>
+</body></html>
